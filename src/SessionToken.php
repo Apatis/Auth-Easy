@@ -2,7 +2,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2018, Pentagonal
+ * Copyright (c) 2018 Pentagonal Development
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,6 @@ class SessionToken implements \Serializable, \JsonSerializable
 
     /**
      * SessionToken constructor.
-     *
      * @param array $sessions
      */
     public function __construct(array $sessions = [])
@@ -236,24 +235,6 @@ class SessionToken implements \Serializable, \JsonSerializable
     }
 
     /**
-     * Generate Random String Password
-     *
-     * @param int $length
-     *
-     * @return string
-     */
-    public static function generateRandomStringToken(int $length = self::TOKEN_LENGTH) : string
-    {
-        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        $password = '';
-        for ($i = 0; $i < $length; $i++) {
-            $password .= substr($chars, rand(0, strlen($chars) - 1), 1);
-        }
-
-        return $password;
-    }
-
-    /**
      * @param array $session
      *
      * @return array
@@ -328,7 +309,7 @@ class SessionToken implements \Serializable, \JsonSerializable
     /**
      * Generate a session token and attach session information to it.
      *
-     * A session token is a long, random string. It is used in a cookie
+     * A session token is a long, UUID v4 string. It is used in a cookie
      * link that cookie to an expiration time and to ensure the cookie
      * becomes invalidated upon logout.
      *
@@ -338,9 +319,9 @@ class SessionToken implements \Serializable, \JsonSerializable
      */
     final public function create(int $expiration) : string
     {
-        $session = [$this->getExpirationName() => $expiration];
-        $token    = $this->generateRandomStringToken(static::TOKEN_LENGTH);
-        $session  = array_merge(
+        $session   = [$this->getExpirationName() => $expiration];
+        $token     = Generator::generateUUIDv4();
+        $session   = array_merge(
             $this->generateAdditionalInfo($session),
             $this->generateSessionFromArray($session)
         );

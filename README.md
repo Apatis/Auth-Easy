@@ -85,3 +85,8 @@ if ($isLogged) {
 }
 
 ```
+
+## LICENSE
+
+[MIT LICENSE](LICENSE)
+

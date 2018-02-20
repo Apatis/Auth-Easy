@@ -2,7 +2,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2018, Pentagonal
+ * Copyright (c) 2018 Pentagonal Development
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,6 +57,23 @@ class Generator
     public function __construct(string $secretKey)
     {
         $this->secretKey = $secretKey;
+    }
+
+    /**
+     * Generate Random UUID
+     *
+     * @return string
+     */
+    public static function generateUUIDv4() : string
+    {
+        return sprintf(
+            '%08x-%04x-%04x-%04x-%12s',
+            time(),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            bin2hex(openssl_random_pseudo_bytes(6))
+        );
     }
 
     /**
@@ -134,8 +151,9 @@ class Generator
         string $token = null
     ) : string {
         if (! $token) {
-            $token = SessionToken::generateRandomStringToken(SessionToken::TOKEN_LENGTH);
+            $token = $this->generateUUIDv4();
         }
+
         if (!$expiration) {
             $expiration = time() + 3600;
         }
