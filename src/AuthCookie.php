@@ -62,6 +62,34 @@ class AuthCookie
     }
 
     /**
+     * Check If Encrypted
+     *
+     * @return bool
+     */
+    public function isEncrypted() : bool
+    {
+        return $this->encrypted;
+    }
+
+    /**
+     * @param string $data
+     * @return false|string
+     */
+    public function getValue(string $data)
+    {
+        return $this->normalizeDecodeValues($data);
+    }
+
+    /**
+     * @param string $data
+     * @return string
+     */
+    public function createValue(string $data)
+    {
+        return $this->normalizeEncodeValues($data);
+    }
+
+    /**
      * @param string $data
      *
      * @return string
@@ -184,7 +212,7 @@ class AuthCookie
      *
      * @param string $data
      *
-     * @return false|string false if invalid or string contains encoded values ready for cookie
+     * @return string false if invalid or string contains encoded values ready for cookie
      */
     protected function normalizeEncodeValues(string $data) : string
     {
