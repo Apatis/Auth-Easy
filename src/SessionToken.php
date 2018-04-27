@@ -356,7 +356,7 @@ class SessionToken implements \Serializable, \JsonSerializable
     {
         $verifier = $this->hash($token);
         $session = $this->getSession($verifier);
-        if (!empty($session) && is_array($session)) {
+        if (!empty($session) && $session instanceof SessionStorage) {
             $this->sessions = [];
             $this->updateSession($verifier, $session);
             return true;
@@ -374,8 +374,8 @@ class SessionToken implements \Serializable, \JsonSerializable
      */
     final public function verify(string $token) : bool
     {
-        $session =  $this->getSession($this->hash($token));
-        return is_array($session);
+        $session = $this->getSession($this->hash($token));
+        return $session instanceof SessionStorage;
     }
 
     /**
